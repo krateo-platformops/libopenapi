@@ -723,7 +723,7 @@ func ConvertComponentIdIntoFriendlyPathSearch(id string) (string, string) {
 		return "", "$."
 	}
 	segs := strings.Split(id, "/")
-	name, _ := url.QueryUnescape(strings.ReplaceAll(segs[len(segs)-1], "~1", "/"))
+	name, _ := url.PathUnescape(strings.ReplaceAll(segs[len(segs)-1], "~1", "/"))
 	cleaned := make([]string, 0, len(segs))
 
 	// use a builder to prevent many pointless string allocations.
@@ -736,7 +736,7 @@ func ConvertComponentIdIntoFriendlyPathSearch(id string) (string, string) {
 		}
 		if !pathCharExp.MatchString(segs[i]) {
 
-			segs[i], _ = url.QueryUnescape(strings.ReplaceAll(segs[i], "~1", "/"))
+			segs[i], _ = url.PathUnescape(strings.ReplaceAll(segs[i], "~1", "/"))
 			sb.Reset()
 			sb.WriteString("['")
 			sb.WriteString(segs[i])
@@ -838,7 +838,7 @@ func ConvertComponentIdIntoFriendlyPathSearch(id string) (string, string) {
 func ConvertComponentIdIntoPath(id string) (string, string) {
 
 	segs := strings.Split(id, ".")
-	name, _ := url.QueryUnescape(strings.ReplaceAll(segs[len(segs)-1], "~1", "/"))
+	name, _ := url.PathUnescape(strings.ReplaceAll(segs[len(segs)-1], "~1", "/"))
 	var cleaned []string
 
 	// check for strange spaces, chars and if found, wrap them up, clean them and create a new cleaned path.

@@ -50,8 +50,11 @@ func (index *SpecIndex) FindComponent(componentId string) *Reference {
 func FindComponent(root *yaml.Node, componentId, absoluteFilePath string, index *SpecIndex) *Reference {
 	// check component for url encoding.
 	if strings.Contains(componentId, "%") {
-		// decode the url.
-		componentId, _ = url.QueryUnescape(componentId)
+		// decode the url. PathUnescape, not QueryUnescape: a $ref fragment is a JSON Pointer, where '+'
+		// is a literal character. QueryUnescape applies x-www-form-urlencoded semantics and turns '+'
+		// into a space, so a component whose name contains '+' -- which .NET generators emit for nested
+		// types, e.g. "ApiKeyQuotasDto+QuotaValue" -- became unresolvable even though it is present.
+		componentId, _ = url.PathUnescape(componentId)
 	}
 
 	name, friendlySearch := utils.ConvertComponentIdIntoFriendlyPathSearch(componentId)
